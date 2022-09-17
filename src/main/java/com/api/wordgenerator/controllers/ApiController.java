@@ -2,7 +2,9 @@ package com.api.wordgenerator.controllers;
 
 import com.api.wordgenerator.dtos.WordDto;
 import com.api.wordgenerator.models.WordModel;
+import com.api.wordgenerator.models.WordTypeModel;
 import com.api.wordgenerator.services.WordService;
+import com.api.wordgenerator.services.WordTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,26 +22,37 @@ public class ApiController {
     @Autowired
     WordService wordService;
 
+    @Autowired
+    WordTypeService wordTypeService;
+
     @PostMapping
     public ResponseEntity<Object> saveWord(@RequestBody @Valid WordDto wordDto){
-        if(!saveWordValidation(wordDto)){
+        if(!saveWordValidationWord(wordDto.getWord())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("This word \"%s\" already exists.",wordDto.getWord()));
         }
+
         var wordModel= new WordModel();
         BeanUtils.copyProperties(wordDto, wordModel);
+
+        Optional<WordTypeModel> optionalWordTypeModel = wordTypeService.findByType(wordDto.getType());
+        if(!optionalWordTypeModel.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word type provide is invalid.");
+        }
+
+        wordModel.setWordTypeModel(optionalWordTypeModel.get());
         return ResponseEntity.status(HttpStatus.CREATED).body(wordService.save(wordModel));
     }
 
-    private boolean saveWordValidation(WordDto wordDto){
-        if(wordService.existsByWord(wordDto.getWord())) {
+    private boolean saveWordValidationWord(String word){
+        if(wordService.existsByWord(word)) {
             return false;
         }
         return true;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<WordModel>> getAllWords(){
-        return ResponseEntity.status(HttpStatus.OK).body(wordService.findAll());
+    public ResponseEntity<List<WordDto>> getAllWords(){
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.findAll()));
     }
 
     @GetMapping("/show/{word}")
@@ -48,34 +61,36 @@ public class ApiController {
         if(optionalWordModel.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Word is not found.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(getWordRemoveUUID(optionalWordModel.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(optionalWordModel.get()));
     }
 
     @GetMapping("/show/random")
     public ResponseEntity<List<WordDto>> getRandomWord(){
-        return ResponseEntity.status(HttpStatus.OK).body(getWordRemoveUUID(wordService.getRandomWord(1)));
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWord(1)));
     }
 
     @GetMapping("/show/random/{number}")
     public ResponseEntity<List<WordDto>> getRandomWord(@PathVariable(value = "number")Integer number){
-        return ResponseEntity.status(HttpStatus.OK).body(getWordRemoveUUID(wordService.getRandomWord(number)));
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWord(number)));
     }
 
-    private WordDto getWordRemoveUUID(WordModel wordModel){
+    private WordDto getMethodWordFormat(WordModel wordModel){
         var wordDto= new WordDto();
         wordDto.setWord(wordModel.getWord());
-        wordDto.setType(wordModel.getType());
+        wordDto.setType(wordModel.getWordTypeModel().getType());
         wordDto.setLanguage(wordModel.getLanguage());
+        wordDto.setMeaning(wordModel.getMeaning());
         return wordDto;
     }
 
-    private List<WordDto> getWordRemoveUUID(List<WordModel> wordModels){
+    private List<WordDto> getMethodWordFormat(List<WordModel> wordModels){
         List<WordDto> wordDtos= new ArrayList<>();
         for(WordModel word: wordModels) {
             var wordDto = new WordDto();
             wordDto.setWord(word.getWord());
-            wordDto.setType(word.getType());
+            wordDto.setType(word.getWordTypeModel().getType());
             wordDto.setLanguage(word.getLanguage());
+            wordDto.setMeaning(word.getMeaning());
             wordDtos.add(wordDto);
         }
         return wordDtos;

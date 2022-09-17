@@ -15,6 +15,9 @@ public class WordDto {
     @Size(max = 30)
     private String language;
 
+    @Size(max = 250)
+    private String meaning;
+
     public String getWord() {
         return word;
     }
@@ -37,5 +40,13 @@ public class WordDto {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getMeaning() {
+        return meaning;
+    }
+
+    public void setMeaning(String meaning) {
+        this.meaning = meaning;
     }
 }

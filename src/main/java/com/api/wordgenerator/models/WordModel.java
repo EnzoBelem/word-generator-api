@@ -13,10 +13,16 @@ public class WordModel {
     private UUID id;
     @Column(nullable = false, unique = true, length = 50)
     private String word;
-    @Column(nullable = false, length = 30)
-    private String type;
+
+    @ManyToOne
+    @JoinColumn(name= "word_type")
+    private WordTypeModel wordTypeModel;
+
     @Column(nullable = false, length = 30)
     private String language;
+
+    @Column(length = 250)
+    private String meaning;
 
     public UUID getId() {
         return id;
@@ -34,14 +40,6 @@ public class WordModel {
         this.word = word;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -50,4 +48,30 @@ public class WordModel {
         this.language = language;
     }
 
+    public WordTypeModel getWordTypeModel() {
+        return wordTypeModel;
+    }
+
+    public void setWordTypeModel(WordTypeModel wordTypeModel) {
+        this.wordTypeModel = wordTypeModel;
+    }
+
+    public String getMeaning() {
+        return meaning;
+    }
+
+    public void setMeaning(String meaning) {
+        this.meaning = meaning;
+    }
+
+    @Override
+    public String toString() {
+        return "WordModel{" +
+                "id=" + id +
+                ", word='" + word + '\'' +
+                ", wordTypeModel=" + wordTypeModel.toString() +
+                ", language='" + language + '\'' +
+                ", meaning='" + meaning + '\'' +
+                '}';
+    }
 }
