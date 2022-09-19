@@ -36,4 +36,13 @@ public class WordService {
     public List<WordModel> getRandomWord(int limit) {
         return wordRepository.getRandomWord(limit);
     }
+
+    public List<WordModel> getRandomWordByType(int limit, String type) {
+        return wordRepository.getRandomWordByType(limit, type);
+    }
+
+    public List<WordModel> getAllByType(String type) {
+        return wordRepository.getAllByType(type);
+    }
+
 }

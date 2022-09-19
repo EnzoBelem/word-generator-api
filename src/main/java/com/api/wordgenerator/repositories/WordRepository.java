@@ -18,4 +18,9 @@ public interface WordRepository extends JpaRepository<WordModel, UUID> {
     @Query(nativeQuery=true, value="SELECT * FROM TB_WORD ORDER BY random() LIMIT :limit")
     List<WordModel> getRandomWord(@Param("limit")int limit);
 
+    @Query(nativeQuery=true, value="SELECT * FROM TB_WORD WHERE UPPER(word_type) = UPPER(:type) ORDER BY random() LIMIT :limit")
+    List<WordModel> getRandomWordByType(int limit, String type);
+
+    @Query(nativeQuery=true, value="SELECT * FROM TB_WORD WHERE UPPER(word_type) = UPPER(:type)")
+    List<WordModel> getAllByType(String type);
 }

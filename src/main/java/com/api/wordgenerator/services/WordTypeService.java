@@ -32,4 +32,8 @@ public class WordTypeService {
     public Optional<WordTypeModel> findByType(String type) {
         return wordTypeRepository.findByTypeIgnoreCase(type);
     }
+
+    public List<String> getAllTypes() {
+        return wordTypeRepository.getAllTypes();
+    }
 }
