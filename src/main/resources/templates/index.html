@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Generator API</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <h1>Word Generator API</h1>
+    <h2>word registration</h2>
+    <form>
+        <label for="word_input">Word</label>
+        <input type="text" name="word_input" id="word_input">
+
+        <label for="word_type_select">Type</label>
+        <select name="word_type_select" id="word_type_select">
+            <option value="Animal">animal</option>
+            <option value="Objeto">objeto</option>
+            <option value="Adjetivo">adjetivo</option>
+        </select>
+
+        <label for="word_lang_input">Language</label>
+        <input type="text" name="word_lang_input" id="word_lang_input">
+
+        <label for="word_meaning_input">Meaning</label>
+        <textarea name="word_meaning_input" id="word_meaning_input" cols="30" rows="10"></textarea>
+
+        <input id="word_reg_submit" type="submit" value="register">
+    </form>
+    <script src="../static/js/app.js"></script>
+</body>
+</html>

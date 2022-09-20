@@ -26,7 +26,6 @@ public class ApiController {
     WordTypeService wordTypeService;
 
     @PostMapping
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
     public ResponseEntity<Object> saveWord(@RequestBody @Valid WordDto wordDto){
         if(!saveWordValidationWord(wordDto.getWord())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("This word \"%s\" already exists.",wordDto.getWord()));
