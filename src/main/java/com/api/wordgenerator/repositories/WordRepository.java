@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface WordRepository extends JpaRepository<WordModel, UUID> {
 
-    boolean existsByWord(String word);
+    boolean existsByWordIgnoreCase(String word);
     Optional<WordModel> findByWordIgnoreCase(String word);
 
     @Query(nativeQuery=true, value="SELECT * FROM TB_WORD ORDER BY random() LIMIT :limit")

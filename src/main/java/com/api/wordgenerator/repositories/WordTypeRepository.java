@@ -15,6 +15,6 @@ public interface WordTypeRepository extends JpaRepository<WordTypeModel, String>
 
     Optional<WordTypeModel> findByTypeIgnoreCase(String type);
 
-    @Query(nativeQuery = true, value = "SELECT type FROM tb_word_type")
+    @Query(nativeQuery = true, value = "SELECT word_type FROM tb_word_type")
     List<String> getAllTypes();
 }

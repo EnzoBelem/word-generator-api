@@ -26,7 +26,7 @@ public class WordService {
     }
 
     public boolean existsByWord(String word) {
-        return wordRepository.existsByWord(word);
+        return wordRepository.existsByWordIgnoreCase(word);
     }
 
     public Optional<WordModel> findByWord(String word) {

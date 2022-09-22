@@ -1,5 +1,7 @@
 package com.api.wordgenerator.models;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -13,15 +15,16 @@ public class WordModel {
     private UUID id;
     @Column(nullable = false, unique = true, length = 50)
     private String word;
-
     @ManyToOne
-    @JoinColumn(name= "word_type")
+    @JoinColumn(nullable = false, name= "word_type")
     private WordTypeModel wordTypeModel;
-
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, name = "word_gender")
+    private String gender;
+    @Column(nullable = false, length = 20, name = "word_number")
+    private String number;
+    @Column(nullable = false, length = 20, name = "word_lang")
     private String language;
-
-    @Column(length = 250)
+    @Column(length = 400, name = "word_meaning")
     private String meaning;
 
     public UUID getId() {
@@ -40,20 +43,36 @@ public class WordModel {
         this.word = word;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public WordTypeModel getWordTypeModel() {
         return wordTypeModel;
     }
 
     public void setWordTypeModel(WordTypeModel wordTypeModel) {
         this.wordTypeModel = wordTypeModel;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getMeaning() {
@@ -69,9 +88,20 @@ public class WordModel {
         return "WordModel{" +
                 "id=" + id +
                 ", word='" + word + '\'' +
-                ", wordTypeModel=" + wordTypeModel.toString() +
+                ", wordTypeModel=" + wordTypeModel +
+                ", gender='" + gender + '\'' +
+                ", number='" + number + '\'' +
                 ", language='" + language + '\'' +
                 ", meaning='" + meaning + '\'' +
                 '}';
     }
+
+    public void wordModelCapitalize(){
+        this.word= StringUtils.capitalize(StringUtils.lowerCase(this.word));
+        this.gender= StringUtils.capitalize(StringUtils.lowerCase(this.gender));
+        this.number= StringUtils.capitalize(StringUtils.lowerCase(this.number));
+        this.language= StringUtils.upperCase(StringUtils.lowerCase(this.language));
+        this.meaning= StringUtils.capitalize(StringUtils.lowerCase(this.meaning));
+    }
+
 }

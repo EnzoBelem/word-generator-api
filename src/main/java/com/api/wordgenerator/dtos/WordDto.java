@@ -14,7 +14,12 @@ public class WordDto {
     @NotBlank
     @Size(max = 30)
     private String language;
-
+    @NotBlank
+    @Size(max = 20)
+    private String gender;
+    @NotBlank
+    @Size(max = 20)
+    private String number;
     @Size(max = 250)
     private String meaning;
 
@@ -40,6 +45,22 @@ public class WordDto {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getMeaning() {

@@ -8,7 +8,6 @@ public class WordTypeDto {
     @NotBlank
     @Size(max = 30)
     private String type;
-
     @NotBlank
     @Size(max = 150)
     private String description;
