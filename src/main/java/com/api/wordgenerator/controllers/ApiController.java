@@ -28,7 +28,7 @@ public class ApiController {
 
     @PostMapping
     public ResponseEntity<Object> saveWord(@RequestBody @Valid WordDto wordDto){
-        var validation = saveWordValidationWord(wordDto);
+        var validation = saveWordValidation(wordDto);
         if(validation.getStatusCode() == HttpStatus.CONFLICT){
             return validation;
         }
@@ -39,14 +39,47 @@ public class ApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(wordService.save(wordModel));
     }
 
-    private ResponseEntity<Object> saveWordValidationWord(WordDto wordDto){
+    private ResponseEntity<Object> saveWordValidation(WordDto wordDto){
         if(wordService.existsByWord(wordDto.getWord())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("This word \"%s\" already exists.",wordDto.getWord()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("This word \"%s\" already exist.",wordDto.getWord()));
         }
         if(wordTypeService.findByType(wordDto.getType()).isEmpty()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The word type provided is invalid.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("the word was validated.");
+        return ResponseEntity.status(HttpStatus.OK).body("the word was validated.");
+    }
+
+    @PutMapping("/{word}")
+    public ResponseEntity<Object> putWord(@PathVariable(value = "word")String word, @RequestBody @Valid WordDto wordDto){
+        if(!wordService.existsByWord(word)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("This word \"%s\" does not exist.", word));
+        }
+        if(wordTypeService.findByType(wordDto.getType()).isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The word type provided is invalid.");
+        }
+        var wordModel= wordService.findByWord(word).get();
+        settingWordModel(wordModel, wordDto);
+        wordModel.wordModelCapitalize();
+        return ResponseEntity.status(HttpStatus.OK).body(wordService.save(wordModel));
+    }
+
+    private void settingWordModel(WordModel wordModel, WordDto wordDto){
+        wordModel.setWord(wordDto.getWord());
+        wordModel.setWordTypeModel(wordTypeService.findByType(wordDto.getType()).get());
+        wordModel.setGender(wordDto.getGender());
+        wordModel.setNumber(wordDto.getNumber());
+        wordModel.setLanguage(wordDto.getLanguage());
+        wordModel.setMeaning(wordDto.getMeaning());
+    }
+
+    @DeleteMapping("/{word}")
+    public ResponseEntity<Object> deleteWord(@PathVariable(value = "word")String word){
+        Optional<WordModel> optionalWordModel= wordService.findByWord(word);
+        if(optionalWordModel.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("This word \"%s\" does not exist.", word));
+        }
+        wordService.delete(optionalWordModel.get());
+        return ResponseEntity.status(HttpStatus.OK).body(String.format("The word \"%s\" was removed.", word));
     }
 
     @GetMapping("/types")

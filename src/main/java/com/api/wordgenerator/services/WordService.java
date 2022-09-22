@@ -45,4 +45,7 @@ public class WordService {
         return wordRepository.getAllByType(type);
     }
 
+    public void delete(WordModel wordModel) {
+         wordRepository.delete(wordModel);
+    }
 }

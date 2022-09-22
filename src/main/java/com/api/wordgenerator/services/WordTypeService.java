@@ -24,7 +24,6 @@ public class WordTypeService {
         return wordTypeRepository.existsByType(type);
     }
 
-
     public List<WordTypeModel> findAll() {
         return wordTypeRepository.findAll();
     }
