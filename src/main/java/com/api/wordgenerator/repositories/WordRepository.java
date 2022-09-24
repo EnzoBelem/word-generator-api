@@ -15,8 +15,14 @@ public interface WordRepository extends JpaRepository<WordModel, UUID> {
     boolean existsByWordIgnoreCase(String word);
     Optional<WordModel> findByWordIgnoreCase(String word);
 
+    @Query(nativeQuery=true, value="SELECT * FROM TB_WORD ORDER BY random() LIMIT 1")
+    WordModel getRandomWord();
+
     @Query(nativeQuery=true, value="SELECT * FROM TB_WORD ORDER BY random() LIMIT :limit")
     List<WordModel> getRandomWord(@Param("limit")int limit);
+
+    @Query(nativeQuery=true, value="SELECT * FROM TB_WORD WHERE UPPER(word_type) = UPPER(:type) ORDER BY random() LIMIT 1")
+    WordModel getRandomWordByType(String type);
 
     @Query(nativeQuery=true, value="SELECT * FROM TB_WORD WHERE UPPER(word_type) = UPPER(:type) ORDER BY random() LIMIT :limit")
     List<WordModel> getRandomWordByType(int limit, String type);

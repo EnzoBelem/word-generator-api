@@ -1,9 +1,11 @@
-const submit = document.getElementById("word_reg_submit");
+const submit = document.getElementById("word_reg_submit")
 
-const word = document.getElementById("word_input");
-const word_type = document.getElementById("word_type_select");
-const word_lang = document.getElementById("word_lang_input");
-const word_meaning = document.getElementById("word_meaning_input");
+const word = document.getElementById("word_input")
+const word_type = document.getElementById("word_type_select")
+const word_number = document.getElementById("word_gender_select")
+const word_gender = document.getElementById("word_number_select")
+const word_lang = document.getElementById("word_lang_input")
+const word_meaning = document.getElementById("word_meaning_input")
 
 submit.addEventListener('click', async (e) => {
     e.preventDefault()
@@ -11,6 +13,8 @@ submit.addEventListener('click', async (e) => {
         let response = await requestFactory('http://localhost:8080/word', 'POST', {
             'word': word.value,
             'type': word_type.options[word_type.selectedIndex].value,
+            'gender': word_gender.options[word_gender.selectedIndex].value,
+            'number': word_number.options[word_number.selectedIndex].value,
             'language': word_lang.value,
             'meaning': word_meaning.value
         })

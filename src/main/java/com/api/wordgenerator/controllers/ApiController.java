@@ -111,8 +111,8 @@ public class ApiController {
     }
 
     @GetMapping("/show/random")
-    public ResponseEntity<List<WordDto>> getRandomWord(){
-        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWord(1)));
+    public ResponseEntity<WordDto> getRandomWord(){
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWord()));
     }
 
     @GetMapping("/show/random/{number}")
@@ -126,7 +126,7 @@ public class ApiController {
         if(!optionalWordTypeModel.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word type provide is invalid.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWordByType(1, type)));
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWordByType(type)));
     }
 
     @GetMapping("/show/random-by-type/{type}/{number}")

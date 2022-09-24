@@ -33,8 +33,16 @@ public class WordService {
         return wordRepository.findByWordIgnoreCase(word);
     }
 
+    public WordModel getRandomWord() {
+        return wordRepository.getRandomWord();
+    }
+
     public List<WordModel> getRandomWord(int limit) {
         return wordRepository.getRandomWord(limit);
+    }
+
+    public WordModel getRandomWordByType(String type) {
+        return wordRepository.getRandomWordByType(type);
     }
 
     public List<WordModel> getRandomWordByType(int limit, String type) {
