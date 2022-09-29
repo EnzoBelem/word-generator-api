@@ -6,7 +6,6 @@ import com.api.wordgenerator.models.WordModel;
 import com.api.wordgenerator.models.WordTypeModel;
 import com.api.wordgenerator.services.WordService;
 import com.api.wordgenerator.services.WordTypeService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -120,13 +120,14 @@ public class ApiController {
         return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWord(number)));
     }
 
-    @GetMapping("/show/random-by-type/{type}")
-    public ResponseEntity<Object> getRandomWordByType(@PathVariable(value = "type")String type){
-        Optional<WordTypeModel> optionalWordTypeModel = wordTypeService.findByType(type);
-        if(!optionalWordTypeModel.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The word type provide is invalid.");
+    @GetMapping("/show/random-by-type/{types}")
+    public ResponseEntity<Object> getRandomWordByType(@PathVariable(value = "types")List<String> types){
+        for (String type : types) {
+            if (!wordTypeService.findByType(type).isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The given word types are invalid.");
+            }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWordByType(type)));
+        return ResponseEntity.status(HttpStatus.OK).body(getMethodWordFormat(wordService.getRandomWordByType(types)));
     }
 
     @GetMapping("/show/random-by-type/{type}/{number}")

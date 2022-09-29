@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import java.beans.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class WordService {
@@ -41,8 +42,9 @@ public class WordService {
         return wordRepository.getRandomWord(limit);
     }
 
-    public WordModel getRandomWordByType(String type) {
-        return wordRepository.getRandomWordByType(type);
+    public WordModel getRandomWordByType(List<String> types) {
+        Random rand = new Random();
+        return wordRepository.getRandomWordByType(types.get(rand.nextInt(types.size())));
     }
 
     public List<WordModel> getRandomWordByType(int limit, String type) {
